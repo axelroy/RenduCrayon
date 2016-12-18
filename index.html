@@ -40,22 +40,25 @@
 
         uniform sampler2D uColorTexture1;
         uniform sampler2D uColorTexture2;
+        uniform sampler2D uColorTexture3;
 
         varying vec2 vTextureCoord;
 
         void main(void) {
             vec2 mapCoord = vec2(vTextureCoord.s, vTextureCoord.t);
 
-            float x = (1.0 + vPosition.x/vPosition.w)*500.0/2.0;
-            float y = (1.0 + vPosition.y/vPosition.w)*500.0/2.0;
+            highp float x = (1.0 + vPosition.x/vPosition.w)*500.0/2.0;
+            highp float y = (1.0 + vPosition.y/vPosition.w)*500.0/2.0;
 
             //gl_FragColor = texture2D(uColorTexture1, vec2(x, y));
             // Chroma key filter (key = 1, 0, 0, 1)
 
-            if(vColor == vec4(1, 0, 0, 1))
+            if (vColor == vec4(1, 0, 0, 1))
                 gl_FragColor = texture2D(uColorTexture1, mapCoord);
-            else
+            else if (vColor == vec4(0, 0, 1, 1))
                 gl_FragColor = texture2D(uColorTexture2, mapCoord);
+            else if (vColor == vec4(0, 0, 0, 1))
+                gl_FragColor = texture2D(uColorTexture3, mapCoord);
         }
     </script>
 
@@ -241,7 +244,7 @@
 
             // Matrices de transformation
             mat4.identity(mvMatrix);
-            mat4.perspective(pMatrix, degToRad(80), c_width / c_height, 0.1, 1000.0);
+            mat4.perspective(pMatrix, degToRad(100), c_width / c_height, 0.1, 1000.0);
 
             translate();
             rotate();
@@ -261,17 +264,33 @@
             //Textures
             var textureIndex1 = 0;
             var textureIndex2 = 1;
+            var textureIndex3 = 2;
 
 
             // Il va falloir faire autrement, c'est extrêmement lourd
             gl.bindBuffer(gl.ARRAY_BUFFER, textCoordsBuffer);
             gl.vertexAttribPointer(prg.textureCoordsAttribute, 2, gl.FLOAT, false, 0, 0);
             gl.activeTexture(gl.TEXTURE0);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); //gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
             gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex1]);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
             gl.uniform1i(prg.texture1, 0);
+
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex2]);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             gl.uniform1i(prg.texture2, 1);
+
+
+            gl.activeTexture(gl.TEXTURE2);
+            gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex3]);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.uniform1i(prg.texture3, 2);
+
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
             gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT,0);
@@ -309,7 +328,8 @@
         function translate() {
             translationMat = mat4.create();
             mat4.identity(translationMat);
-            mat4.translate(translationMat,translationMat, [0.0, 0.0, -3.0]);
+            mat4.rotate(mvMatrix, mvMatrix, degToRad(20), [1, 0, 0]);
+            mat4.translate(translationMat,translationMat, [0.0, -1.0, -3.0]);
             mat4.multiply(mvMatrix,translationMat, mvMatrix);
         }
 
