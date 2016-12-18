@@ -47,16 +47,39 @@
         void main(void) {
             vec2 mapCoord = vec2(vTextureCoord.s, vTextureCoord.t);
 
-            highp float x = (1.0 + vPosition.x/vPosition.w)*500.0/2.0;
-            highp float y = (1.0 + vPosition.y/vPosition.w)*500.0/2.0;
 
-            //gl_FragColor = texture2D(uColorTexture1, vec2(x, y));
-            // Chroma key filter (key = 1, 0, 0, 1)
+            highp float x = (1.0 + vPosition.x/vPosition.w)*800.0/2.0;
+            highp float y = (1.0 + vPosition.y/vPosition.w)*600.0/2.0;
+            // mapCoord = vec2(x, y);
 
+            // Back face
+            // colors.push(1, 0, 0, 1);
+
+            // Front face
+            // colors.push(1, 0, 0, 1);
+
+            // Top face
+            // colors.push(0, 0, 0, 1);
+
+            // Right face
+            // colors.push(0, 0, 1, 1);
+
+            // Left face
+            // colors.push(0, 0, 1, 1);
+
+            // Bottom face
+            // colors.push(0, 0, 0, 1);
+
+            // Back face
+            // Front face
             if (vColor == vec4(1, 0, 0, 1))
                 gl_FragColor = texture2D(uColorTexture1, mapCoord);
+            //  Left face
+            // Rigth face
             else if (vColor == vec4(0, 0, 1, 1))
                 gl_FragColor = texture2D(uColorTexture2, mapCoord);
+            // Top face
+            // Bottom face
             else if (vColor == vec4(0, 0, 0, 1))
                 gl_FragColor = texture2D(uColorTexture3, mapCoord);
         }
@@ -72,7 +95,6 @@
         var rotAngle = 0;
         var angle = 0;
         var index = 0;
-        var goForward = true;
 
         //Déclaration des 3 pointeurs sur buffer permettant de transmettre aux Shaders la géometrie de la scene (position / indices / couleurs)
         var vertexBuffer = null;
@@ -265,31 +287,48 @@
             var textureIndex1 = 0;
             var textureIndex2 = 1;
             var textureIndex3 = 2;
+            var textureIndex4 = 3;
+            var textureIndex5 = 4;
+            var textureIndex6 = 5;
 
 
             // Il va falloir faire autrement, c'est extrêmement lourd
             gl.bindBuffer(gl.ARRAY_BUFFER, textCoordsBuffer);
             gl.vertexAttribPointer(prg.textureCoordsAttribute, 2, gl.FLOAT, false, 0, 0);
             gl.activeTexture(gl.TEXTURE0);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); //gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
             gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex1]);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             gl.uniform1i(prg.texture1, 0);
 
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex2]);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             gl.uniform1i(prg.texture2, 1);
 
 
             gl.activeTexture(gl.TEXTURE2);
             gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex3]);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             gl.uniform1i(prg.texture3, 2);
+
+
+            gl.activeTexture(gl.TEXTURE3);
+            gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex4]);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.uniform1i(prg.texture4, 3);
+
+
+            gl.activeTexture(gl.TEXTURE4);
+            gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex5]);
+            gl.uniform1i(prg.texture5, 4);
 
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -339,7 +378,6 @@
         function goLeft(){
             if(angle == 0)
             {
-                goForward = false;
                 index --;
                 angle = -45;
             }
@@ -348,7 +386,6 @@
         function goRight(){
             if(angle == 0)
             {
-                goForward = true;
                 index ++;
                 angle = 45;
             }
