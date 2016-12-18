@@ -56,8 +56,6 @@
                 gl_FragColor = texture2D(uColorTexture1, mapCoord);
             else
                 gl_FragColor = texture2D(uColorTexture2, mapCoord);
-
-
         }
     </script>
 
@@ -110,6 +108,8 @@
         gl.enableVertexAttribArray(prg.textureCoordsAttribute);
         prg.texture1 = gl.getUniformLocation(prg, "uColorTexture1");
         prg.texture2 = gl.getUniformLocation(prg, "uColorTexture2");
+        prg.texture3 = gl.getUniformLocation(prg, "uColorTexture3");
+        prg.texture4 = gl.getUniformLocation(prg, "uColorTexture4");
 
         //Matrices
         prg.pMatrixUniform = gl.getUniformLocation(prg, 'uPMatrix');
@@ -260,34 +260,10 @@
 
             //Textures
             var textureIndex1 = 0;
-            var textureIndex2 = 0;
-
-            if(goForward) {
-                if(index.mod(2) == 0) {
-                    textureIndex1 = index.mod(texColorTab.length);
-                    textureIndex2 = (textureIndex1 - 1).mod(texColorTab.length);
-                    console.log("PAIR  :" + index + "   :     texIndex = " + textureIndex1 + "     texIndex2 = " + textureIndex2);
-                }
-                else {
-                    textureIndex2 = index.mod(texColorTab.length);
-                    textureIndex1 = (textureIndex2 - 1).mod(texColorTab.length);
-                    console.log("IMPAIR:" + index + "   :     texIndex = " + textureIndex1 + "     texIndex2 = " + textureIndex2);
-                }
-            }
-            else {
-                if(index.mod(2) == 0) {
-                    textureIndex1 = (index).mod(texColorTab.length);
-                    textureIndex2 = (textureIndex1 + 1).mod(texColorTab.length);
-                    console.log("PAIR  :" + index + "   :     texIndex = " + textureIndex1 + "     texIndex2 = " + textureIndex2);
-                }
-                else {
-                    textureIndex1 = (index+1).mod(texColorTab.length);
-                    textureIndex2 = (index).mod(texColorTab.length);
-                    console.log("IMPAIR:" + index + "   :     texIndex = " + textureIndex1 + "     texIndex2 = " + textureIndex2);
-                }
-            }
+            var textureIndex2 = 1;
 
 
+            // Il va falloir faire autrement, c'est extrêmement lourd
             gl.bindBuffer(gl.ARRAY_BUFFER, textCoordsBuffer);
             gl.vertexAttribPointer(prg.textureCoordsAttribute, 2, gl.FLOAT, false, 0, 0);
             gl.activeTexture(gl.TEXTURE0);
@@ -345,7 +321,7 @@
             {
                 goForward = false;
                 index --;
-                angle = -90;
+                angle = -45;
             }
         }
 
@@ -354,7 +330,7 @@
             {
                 goForward = true;
                 index ++;
-                angle = 90;
+                angle = 45;
             }
         }
 
@@ -371,7 +347,7 @@
     Body
 -->
 <body onload="initWebGL()">
-    <h1>Carrousel 3D</h1>
+    <h1>Rendu crayon</h1>
     <button id="goLeft" onclick="goLeft()"> << </button>
     <button id="goRight" onclick="goRight()"> >> </button>
     <br />
