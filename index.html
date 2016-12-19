@@ -45,39 +45,23 @@
         varying vec2 vTextureCoord;
 
         void main(void) {
-            vec2 mapCoord = vec2(vTextureCoord.s, vTextureCoord.t);
+            //vec2 mapCoord = vec2(vTextureCoord.s, vTextureCoord.t);
 
-            float x = (1.0 + vPosition.x/vPosition.w)*1.0/2.0;
-            float y = (1.0 + vPosition.y/vPosition.w)*1.0/2.0;
+            float x = (1.0 + vPosition.x*1.0/vPosition.w);
+            float y = (1.0 + vPosition.y*1.0/vPosition.w);
 
+            x = mod(x, 1.0);
+            y = mod(y, 1.0);
 
-            x = mod(x, vPosition.w);
-            y = mod(y, vPosition.w);
+            vec2 mapCoord = vec2(x, y);
 
-
-
-           mapCoord = vec2(x, y);
-
-            // Back face
-            // colors.push(1, 0, 0, 1);
-
-            // Front face
-            // colors.push(1, 0, 0, 1);
-
-            // Top face
-            // colors.push(0, 0, 0, 1);
-
-            // Right face
-            // colors.push(0, 0, 1, 1);
-
-            // Left face
-            // colors.push(0, 0, 1, 1);
-
-            // Bottom face
-            // colors.push(0, 0, 0, 1);
             // gl_FragColor = vec4(y, 0.0, 0.0, 1.0);
-            gl_FragColor = vec4(mapCoord, 0, 1);
+            gl_FragColor = vec4(vPosition.x,  vPosition.y, 0, 1);
 
+            bool texture = true;
+
+            if (texture)
+            {
             // Back face
             // Front face
             if (vColor == vec4(1, 0, 0, 1))
@@ -90,6 +74,7 @@
             // Bottom face
             else if (vColor == vec4(0, 0, 0, 1))
                 gl_FragColor = texture2D(uColorTexture3, mapCoord);
+            }
 
         }
     </script>
@@ -275,7 +260,7 @@
 
             // Matrices de transformation
             mat4.identity(mvMatrix);
-            mat4.perspective(pMatrix, degToRad(100), c_width / c_height, 0.1, 1000.0);
+            mat4.perspective(pMatrix, degToRad(80), c_width / c_height, 0.1, 1000.0);
 
             translate();
             rotate();
@@ -371,7 +356,7 @@
             translationMat = mat4.create();
             mat4.identity(translationMat);
             mat4.rotate(mvMatrix, mvMatrix, degToRad(20), [1, 0, 0]);
-            mat4.translate(translationMat,translationMat, [0.0, -0.4, -3.0]);
+            mat4.translate(translationMat,translationMat, [0.0, -0.5, -3.0]);
             mat4.multiply(mvMatrix,translationMat, mvMatrix);
         }
 
