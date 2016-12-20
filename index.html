@@ -47,11 +47,11 @@
         void main(void) {
             //vec2 mapCoord = vec2(vTextureCoord.s, vTextureCoord.t);
 
-            float x = (1.0 + vPosition.x*1.0/vPosition.w);
-            float y = (1.0 + vPosition.y*1.0/vPosition.w);
+            float x = (1.0 + (vPosition.x/vPosition.w));
+            float y = (1.0 + (vPosition.y/vPosition.w));
 
-            x = mod(x, 1.0);
-            y = mod(y, 1.0);
+            // x = mod(x, 1.0);
+            // y = mod(y, 1.0);
 
             vec2 mapCoord = vec2(x, y);
 
@@ -103,7 +103,7 @@
         //Déclaration des tableaux correspondants aux buffers mais pour le JS
         var indices = [];
         var vertices = [];
-        var colors = [];
+        var normals = [];
         //Matrices de transformation
         var mvMatrix = mat4.create();
         var pMatrix = mat4.create();
@@ -138,7 +138,7 @@
         //Remplissage des buffers
         function initBuffers(){
             vertices = [];
-            colors = [];
+            normals = [];
             indices = [];
             textCoords = [];
 
@@ -151,10 +151,10 @@
             vertices.push( 1.0, -1.0,  1.0);
             vertices.push( 1.0,  1.0,  1.0);
             vertices.push(-1.0,  1.0,  1.0);
-            colors.push(1, 0, 0, 1);
-            colors.push(1, 0, 0, 1);
-            colors.push(1, 0, 0, 1);
-            colors.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
             textCoords.push(0.0, 0.0);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
@@ -167,10 +167,10 @@
             vertices.push(-1.0,  1.0, -1.0);
             vertices.push( 1.0,  1.0, -1.0);
             vertices.push( 1.0, -1.0, -1.0);
-            colors.push(1, 0, 0, 1);
-            colors.push(1, 0, 0, 1);
-            colors.push(1, 0, 0, 1);
-            colors.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
+            normals.push(1, 0, 0, 1);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
             textCoords.push(0.0, 1.0);
@@ -183,10 +183,10 @@
             vertices.push(-1.0,  1.0,  1.0);
             vertices.push( 1.0,  1.0,  1.0);
             vertices.push( 1.0,  1.0, -1.0);
-            colors.push(0, 0, 0, 1);
-            colors.push(0, 0, 0, 1);
-            colors.push(0, 0, 0, 1);
-            colors.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
             textCoords.push(0.0, 1.0);
             textCoords.push(0.0, 0.0);
             textCoords.push(1.0, 0.0);
@@ -199,10 +199,10 @@
             vertices.push( 1.0, -1.0, -1.0);
             vertices.push( 1.0, -1.0,  1.0);
             vertices.push(-1.0, -1.0,  1.0);
-            colors.push(0, 0, 0, 1);
-            colors.push(0, 0, 0, 1);
-            colors.push(0, 0, 0, 1);
-            colors.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
+            normals.push(0, 0, 0, 1);
             textCoords.push(1.0, 1.0);
             textCoords.push(0.0, 1.0);
             textCoords.push(0.0, 0.0);
@@ -215,10 +215,10 @@
             vertices.push( 1.0,  1.0, -1.0);
             vertices.push( 1.0,  1.0,  1.0);
             vertices.push( 1.0, -1.0,  1.0);
-            colors.push(0, 0, 1, 1);
-            colors.push(0, 0, 1, 1);
-            colors.push(0, 0, 1, 1);
-            colors.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
             textCoords.push(0.0, 1.0);
@@ -231,10 +231,10 @@
             vertices.push(-1.0, -1.0,  1.0);
             vertices.push(-1.0,  1.0,  1.0);
             vertices.push(-1.0,  1.0, -1.0);
-            colors.push(0, 0, 1, 1);
-            colors.push(0, 0, 1, 1);
-            colors.push(0, 0, 1, 1);
-            colors.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
+            normals.push(0, 0, 1, 1);
             textCoords.push(0.0, 0.0);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
@@ -244,7 +244,7 @@
 
             //Liaison des pointeurs avec les tableaux
             vertexBuffer = getVertexBufferWithVertices(vertices);
-            colorBuffer  = getVertexBufferWithVertices(colors);
+            colorBuffer  = getVertexBufferWithVertices(normals);
             indexBuffer  = getIndexBufferWithIndices(indices);
             textCoordsBuffer = getArrayBufferWithArray(textCoords);
         }
@@ -350,6 +350,7 @@
                 rotAngle--;
             }
             mat4.rotate(mvMatrix, mvMatrix, degToRad(rotAngle), [0, 1, 0]);
+            mat4.rotate(mvMatrix, mvMatrix, degToRad(rotAngle/2), [0, 0, 1]);
         }
 
         function translate() {
@@ -378,13 +379,6 @@
                 angle = 45;
             }
         }
-
-        //--------------------------------------------
-        //Fonctions parce que JS ca marche pas
-        //--------------------------------------------
-        Number.prototype.mod = function(n) {
-            return ((this%n)+n)%n;
-        }
     </script>
 </head>
 
@@ -396,7 +390,7 @@
     <button id="goLeft" onclick="goLeft()"> << </button>
     <button id="goRight" onclick="goRight()"> >> </button>
     <br />
-    <canvas id="webgl-canvas" width="800" height="600">
+    <canvas id="webgl-canvas" width="800" height="800">
         HTML5 is not supported
     </canvas>
 </body>
