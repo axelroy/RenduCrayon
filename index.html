@@ -116,23 +116,23 @@
         //prg est le programme GLSL regroupant les 2 shaders déclaré dans webgltools.js et initialisé dans initProgram()
         function initShaderParameters(prg){
         //Géométrie et couleurs
-        prg.vertexPositionAttribute = gl.getAttribLocation(prg, "aVertexPosition");
-        gl.enableVertexAttribArray(prg.vertexPositionAttribute);
+        prg.vertexPositionAttribute = glContext.getAttribLocation(prg, "aVertexPosition");
+        glContext.enableVertexAttribArray(prg.vertexPositionAttribute);
 
-        prg.colorAttribute = gl.getAttribLocation(prg, "aColor");
-        gl.enableVertexAttribArray(prg.colorAttribute);
+        prg.colorAttribute = glContext.getAttribLocation(prg, "aColor");
+        glContext.enableVertexAttribArray(prg.colorAttribute);
 
         //Textures
-        prg.textureCoordsAttribute = gl.getAttribLocation(prg, "aTextureCoord");
-        gl.enableVertexAttribArray(prg.textureCoordsAttribute);
-        prg.texture1 = gl.getUniformLocation(prg, "uColorTexture1");
-        prg.texture2 = gl.getUniformLocation(prg, "uColorTexture2");
-        prg.texture3 = gl.getUniformLocation(prg, "uColorTexture3");
-        prg.texture4 = gl.getUniformLocation(prg, "uColorTexture4");
+        prg.textureCoordsAttribute = glContext.getAttribLocation(prg, "aTextureCoord");
+        glContext.enableVertexAttribArray(prg.textureCoordsAttribute);
+        prg.texture1 = glContext.getUniformLocation(prg, "uColorTexture1");
+        prg.texture2 = glContext.getUniformLocation(prg, "uColorTexture2");
+        prg.texture3 = glContext.getUniformLocation(prg, "uColorTexture3");
+        prg.texture4 = glContext.getUniformLocation(prg, "uColorTexture4");
 
         //Matrices
-        prg.pMatrixUniform = gl.getUniformLocation(prg, 'uPMatrix');
-        prg.mvMatrixUniform = gl.getUniformLocation(prg, 'uMVMatrix');
+        prg.pMatrixUniform = glContext.getUniformLocation(prg, 'uPMatrix');
+        prg.mvMatrixUniform = glContext.getUniformLocation(prg, 'uMVMatrix');
         }
 
         //Remplissage des buffers
@@ -250,13 +250,30 @@
         }
 
 
+        function initTextures() {
+          cubeTexture = gl.createTexture();
+          cubeImage = new Image();
+          cubeImage.onload = function() { handleTextureLoaded(cubeImage, cubeTexture); }
+          cubeImage.src = "cubetexture.png";
+        }
+
+        function handleTextureLoaded(image, texture) {
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+          gl.generateMipmap(gl.TEXTURE_2D);
+          gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+
+
         function drawScene(){
 
             //Préparation de la scene
-            gl.clearColor(0.9, 0.9, 0.9, 1.0);
-            gl.enable(gl.DEPTH_TEST);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            gl.viewport(0, 0, c_width, c_height);    //Associer la projection a la taille du canevas
+            glContext.clearColor(0.9, 0.9, 0.9, 1.0);
+            glContext.enable(glContext.DEPTH_TEST);
+            glContext.clear(glContext.COLOR_BUFFER_BIT | glContext.DEPTH_BUFFER_BIT);
+            glContext.viewport(0, 0, c_width, c_height);    //Associer la projection a la taille du canevas
 
             // Matrices de transformation
             mat4.identity(mvMatrix);
@@ -265,12 +282,12 @@
             translate();
             rotate();
 
-            gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
-            gl.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
-            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-            gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-            gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-            gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
+            glContext.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
+            glContext.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
+            glContext.bindBuffer(glContext.ARRAY_BUFFER, vertexBuffer);
+            glContext.vertexAttribPointer(prg.vertexPositionAttribute, 3, glContext.FLOAT, false, 0, 0);
+            glContext.bindBuffer(glContext.ARRAY_BUFFER, colorBuffer);
+            glContext.vertexAttribPointer(prg.colorAttribute, 4, glContext.FLOAT, false, 0, 0);
 
 
             //---------------------------------------------
@@ -287,45 +304,45 @@
 
 
             // Il va falloir faire autrement, c'est extrêmement lourd
-            gl.bindBuffer(gl.ARRAY_BUFFER, textCoordsBuffer);
-            gl.vertexAttribPointer(prg.textureCoordsAttribute, 2, gl.FLOAT, false, 0, 0);
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex1]);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-            gl.uniform1i(prg.texture1, 0);
+            glContext.bindBuffer(glContext.ARRAY_BUFFER, textCoordsBuffer);
+            glContext.vertexAttribPointer(prg.textureCoordsAttribute, 2, glContext.FLOAT, false, 0, 0);
+            glContext.activeTexture(glContext.TEXTURE0);
+            glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex1]);
+            // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
+            glContext.uniform1i(prg.texture1, 0);
 
-            gl.activeTexture(gl.TEXTURE1);
-            gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex2]);
-            //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-            gl.uniform1i(prg.texture2, 1);
-
-
-            gl.activeTexture(gl.TEXTURE2);
-            gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex3]);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-            gl.uniform1i(prg.texture3, 2);
+            glContext.activeTexture(glContext.TEXTURE1);
+            glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex2]);
+            //glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
+            glContext.uniform1i(prg.texture2, 1);
 
 
-            gl.activeTexture(gl.TEXTURE3);
-            gl.bindTexture(gl.TEXTURE_2D, texColorTab[textureIndex4]);
-            // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-            gl.uniform1i(prg.texture4, 3);
+            glContext.activeTexture(glContext.TEXTURE2);
+            glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex3]);
+            // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
+            glContext.uniform1i(prg.texture3, 2);
 
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-            gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT,0);
+
+            glContext.activeTexture(glContext.TEXTURE3);
+            glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex4]);
+            // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
+            glContext.uniform1i(prg.texture4, 3);
+
+            glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
+            glContext.drawElements(glContext.TRIANGLES, indices.length, glContext.UNSIGNED_SHORT,0);
         }
 
         //Retourne un contexte de rendu sur le canevas déclaré en html
         function initWebGL(){
-            gl = getGLContext('webgl-canvas');
+            glContext = getGLContext('webgl-canvas');
             initProgram();
             initBuffers();
 

@@ -1,4 +1,4 @@
-var gl = null;
+var glContext = null;
 var c_width = 0;
 var c_height = 0;
 var prg = null;
@@ -27,18 +27,18 @@ function getShader(gl, id) {
 
     var shader;
     if (script.type == "x-shader/x-fragment") {
-        shader = gl.createShader(gl.FRAGMENT_SHADER);
+        shader = glContext.createShader(glContext.FRAGMENT_SHADER);
     } else if (script.type == "x-shader/x-vertex") {
-        shader = gl.createShader(gl.VERTEX_SHADER);
+        shader = glContext.createShader(glContext.VERTEX_SHADER);
     } else {
         return null;
     }
 
-    gl.shaderSource(shader, str);
-    gl.compileShader(shader);
+    glContext.shaderSource(shader, str);
+    glContext.compileShader(shader);
 
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert(gl.getShaderInfoLog(shader));
+    if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
+        alert(glContext.getShaderInfoLog(shader));
         return null;
     }
     return shader;
@@ -50,19 +50,19 @@ function getShader(gl, id) {
  * The vertex shader and the fragment shaders together are called through that program.
  */
 function initProgram() {
-    var fgShader = getShader(gl, "shader-fs");
-    var vxShader = getShader(gl, "shader-vs");
+    var fgShader = getShader(glContext, "shader-fs");
+    var vxShader = getShader(glContext, "shader-vs");
 
-    prg = gl.createProgram();
-    gl.attachShader(prg, vxShader);
-    gl.attachShader(prg, fgShader);
-    gl.linkProgram(prg);
+    prg = glContext.createProgram();
+    glContext.attachShader(prg, vxShader);
+    glContext.attachShader(prg, fgShader);
+    glContext.linkProgram(prg);
 
-    if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
+    if (!glContext.getProgramParameter(prg, glContext.LINK_STATUS)) {
         alert("Could not initialise shaders");
     }
 
-    gl.useProgram(prg);
+    glContext.useProgram(prg);
 
     initShaderParameters(prg);
 
@@ -142,10 +142,10 @@ function getGLContext(canvasName) {
  * The following code snippet creates a vertex buffer and binds the vertices to it.
  */
 function getVertexBufferWithVertices(vertices) {
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    var vBuffer = glContext.createBuffer();
+    glContext.bindBuffer(glContext.ARRAY_BUFFER, vBuffer);
+    glContext.bufferData(glContext.ARRAY_BUFFER, new Float32Array(vertices), glContext.STATIC_DRAW);
+    glContext.bindBuffer(glContext.ARRAY_BUFFER, null);
 
     return vBuffer;
 }
@@ -154,10 +154,10 @@ function getVertexBufferWithVertices(vertices) {
  * The following code snippet creates a vertex buffer and binds the indices to it.
  */
 function getIndexBufferWithIndices(indices) {
-    var iBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+    var iBuffer = glContext.createBuffer();
+    glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, iBuffer);
+    glContext.bufferData(glContext.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), glContext.STATIC_DRAW);
+    glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, null);
 
     return iBuffer;
 }
@@ -165,10 +165,10 @@ function getIndexBufferWithIndices(indices) {
 
 function getArrayBufferWithArray(values) {
     //The following code snippet creates an array buffer and binds the array values to it
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(values), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    var vBuffer = glContext.createBuffer();
+    glContext.bindBuffer(glContext.ARRAY_BUFFER, vBuffer);
+    glContext.bufferData(glContext.ARRAY_BUFFER, new Float32Array(values), glContext.STATIC_DRAW);
+    glContext.bindBuffer(glContext.ARRAY_BUFFER, null);
 
     return vBuffer;
 }
@@ -176,19 +176,19 @@ function getArrayBufferWithArray(values) {
 
 function initTextureWithImage(sFilename, texturen) {
     var anz = texturen.length;
-    texturen[anz] = gl.createTexture();
+    texturen[anz] = glContext.createTexture();
 
     texturen[anz].image = new Image();
     texturen[anz].image.onload = function() {
-        gl.bindTexture(gl.TEXTURE_2D, texturen[anz]);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texturen[anz].image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        glContext.bindTexture(glContext.TEXTURE_2D, texturen[anz]);
+        glContext.pixelStorei(glContext.UNPACK_FLIP_Y_WEBGL, true);
+        glContext.texImage2D(glContext.TEXTURE_2D, 0, glContext.RGBA, glContext.RGBA, glContext.UNSIGNED_BYTE, texturen[anz].image);
+        glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.NEAREST);
+        glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MAG_FILTER, glContext.NEAREST);
 
-        gl.generateMipmap(gl.TEXTURE_2D);
+        glContext.generateMipmap(glContext.TEXTURE_2D);
 
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        glContext.bindTexture(glContext.TEXTURE_2D, null);
     }
 
     texturen[anz].image.src = sFilename;
@@ -209,12 +209,12 @@ function initTextureWithImage(sFilename, texturen) {
 
     ctx.fillRect(0, 0, 64, 64);
 
-    gl.bindTexture(gl.TEXTURE_2D, texturen[anz]);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    glContext.bindTexture(glContext.TEXTURE_2D, texturen[anz]);
+    glContext.texImage2D(glContext.TEXTURE_2D, 0, glContext.RGBA, glContext.RGBA, glContext.UNSIGNED_BYTE, c);
+    glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.NEAREST);
+    glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MAG_FILTER, glContext.NEAREST);
+    glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.CLAMP_TO_EDGE);
+    glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.CLAMP_TO_EDGE);
 }
 
 function calculateTangents(vs, tc, ind) {
