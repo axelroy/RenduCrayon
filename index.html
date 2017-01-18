@@ -41,6 +41,9 @@
         uniform sampler2D uColorTexture1;
         uniform sampler2D uColorTexture2;
         uniform sampler2D uColorTexture3;
+        uniform sampler2D uColorTexture4;
+        uniform sampler2D uColorTexture5;
+        uniform sampler2D uColorTexture6;
 
         varying vec2 vTextureCoord;
 
@@ -56,24 +59,26 @@
             vec2 mapCoord = vec2(x, y);
 
             // gl_FragColor = vec4(y, 0.0, 0.0, 1.0);
-            gl_FragColor = vec4(vPosition.x,  vPosition.y, 0, 1);
+            // gl_FragColor = vec4(vPosition.x,  vPosition.y, 0, 1);
+            gl_FragColor = vec4(vColor.xyz, 1);
+
 
             bool texture = true;
 
             if (texture)
             {
-            // Back face
-            // Front face
-            if (vColor == vec4(1, 0, 0, 1))
-                gl_FragColor = texture2D(uColorTexture1, mapCoord);
-            //  Left face
-            // Rigth face
-            else if (vColor == vec4(0, 0, 1, 1))
-                gl_FragColor = texture2D(uColorTexture2, mapCoord);
-            // Top face
-            // Bottom face
-            else if (vColor == vec4(0, 0, 0, 1))
-                gl_FragColor = texture2D(uColorTexture3, mapCoord);
+                if (vColor == vec4(0, 0, 1, 0))
+                    gl_FragColor = texture2D(uColorTexture1, mapCoord);
+                else if (vColor == vec4(0, 1, 0, 0))
+                    gl_FragColor = texture2D(uColorTexture2, mapCoord);
+                else if (vColor == vec4(0, 1, 1, 0))
+                    gl_FragColor = texture2D(uColorTexture3, mapCoord);
+                else if (vColor == vec4(1, 0, 0, 0))
+                    gl_FragColor = texture2D(uColorTexture4, mapCoord);
+                else if (vColor == vec4(1, 0, 1, 0))
+                    gl_FragColor = texture2D(uColorTexture5, mapCoord);
+                else if (vColor == vec4(1, 1, 0, 0))
+                    gl_FragColor = texture2D(uColorTexture6, mapCoord);
             }
 
         }
@@ -129,6 +134,8 @@
         prg.texture2 = glContext.getUniformLocation(prg, "uColorTexture2");
         prg.texture3 = glContext.getUniformLocation(prg, "uColorTexture3");
         prg.texture4 = glContext.getUniformLocation(prg, "uColorTexture4");
+        prg.texture5 = glContext.getUniformLocation(prg, "uColorTexture5");
+        prg.texture6 = glContext.getUniformLocation(prg, "uColorTexture6");
 
         //Matrices
         prg.pMatrixUniform = glContext.getUniformLocation(prg, 'uPMatrix');
@@ -151,10 +158,10 @@
             vertices.push( 1.0, -1.0,  1.0);
             vertices.push( 1.0,  1.0,  1.0);
             vertices.push(-1.0,  1.0,  1.0);
-            normals.push(1, 0, 0, 1);
-            normals.push(1, 0, 0, 1);
-            normals.push(1, 0, 0, 1);
-            normals.push(1, 0, 0, 1);
+            normals.push(0, 0, 1, 0);
+            normals.push(0, 0, 1, 0);
+            normals.push(0, 0, 1, 0);
+            normals.push(0, 0, 1, 0);
             textCoords.push(0.0, 0.0);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
@@ -167,10 +174,10 @@
             vertices.push(-1.0,  1.0, -1.0);
             vertices.push( 1.0,  1.0, -1.0);
             vertices.push( 1.0, -1.0, -1.0);
-            normals.push(1, 0, 0, 1);
-            normals.push(1, 0, 0, 1);
-            normals.push(1, 0, 0, 1);
-            normals.push(1, 0, 0, 1);
+            normals.push(0, 1, 0, 0);
+            normals.push(0, 1, 0, 0);
+            normals.push(0, 1, 0, 0);
+            normals.push(0, 1, 0, 0);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
             textCoords.push(0.0, 1.0);
@@ -183,10 +190,10 @@
             vertices.push(-1.0,  1.0,  1.0);
             vertices.push( 1.0,  1.0,  1.0);
             vertices.push( 1.0,  1.0, -1.0);
-            normals.push(0, 0, 0, 1);
-            normals.push(0, 0, 0, 1);
-            normals.push(0, 0, 0, 1);
-            normals.push(0, 0, 0, 1);
+            normals.push(0, 1, 1, 0);
+            normals.push(0, 1, 1, 0);
+            normals.push(0, 1, 1, 0);
+            normals.push(0, 1, 1, 0);
             textCoords.push(0.0, 1.0);
             textCoords.push(0.0, 0.0);
             textCoords.push(1.0, 0.0);
@@ -199,10 +206,10 @@
             vertices.push( 1.0, -1.0, -1.0);
             vertices.push( 1.0, -1.0,  1.0);
             vertices.push(-1.0, -1.0,  1.0);
-            normals.push(0, 0, 0, 1);
-            normals.push(0, 0, 0, 1);
-            normals.push(0, 0, 0, 1);
-            normals.push(0, 0, 0, 1);
+            normals.push(1, 0, 0, 0);
+            normals.push(1, 0, 0, 0);
+            normals.push(1, 0, 0, 0);
+            normals.push(1, 0, 0, 0);
             textCoords.push(1.0, 1.0);
             textCoords.push(0.0, 1.0);
             textCoords.push(0.0, 0.0);
@@ -215,10 +222,10 @@
             vertices.push( 1.0,  1.0, -1.0);
             vertices.push( 1.0,  1.0,  1.0);
             vertices.push( 1.0, -1.0,  1.0);
-            normals.push(0, 0, 1, 1);
-            normals.push(0, 0, 1, 1);
-            normals.push(0, 0, 1, 1);
-            normals.push(0, 0, 1, 1);
+            normals.push(1, 0, 1, 0);
+            normals.push(1, 0, 1, 0);
+            normals.push(1, 0, 1, 0);
+            normals.push(1, 0, 1, 0);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
             textCoords.push(0.0, 1.0);
@@ -231,10 +238,10 @@
             vertices.push(-1.0, -1.0,  1.0);
             vertices.push(-1.0,  1.0,  1.0);
             vertices.push(-1.0,  1.0, -1.0);
-            normals.push(0, 0, 1, 1);
-            normals.push(0, 0, 1, 1);
-            normals.push(0, 0, 1, 1);
-            normals.push(0, 0, 1, 1);
+            normals.push(1, 1, 0, 0);
+            normals.push(1, 1, 0, 0);
+            normals.push(1, 1, 0, 0);
+            normals.push(1, 1, 0, 0);
             textCoords.push(0.0, 0.0);
             textCoords.push(1.0, 0.0);
             textCoords.push(1.0, 1.0);
@@ -306,19 +313,20 @@
             // Il va falloir faire autrement, c'est extrêmement lourd
             glContext.bindBuffer(glContext.ARRAY_BUFFER, textCoordsBuffer);
             glContext.vertexAttribPointer(prg.textureCoordsAttribute, 2, glContext.FLOAT, false, 0, 0);
+
             glContext.activeTexture(glContext.TEXTURE0);
             glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex1]);
             // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
-            glContext.uniform1i(prg.texture1, 0);
+            glContext.uniform1i(prg.texture1, textureIndex1);
 
             glContext.activeTexture(glContext.TEXTURE1);
             glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex2]);
             //glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
-            glContext.uniform1i(prg.texture2, 1);
+            glContext.uniform1i(prg.texture2, textureIndex2);
 
 
             glContext.activeTexture(glContext.TEXTURE2);
@@ -326,15 +334,28 @@
             // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
-            glContext.uniform1i(prg.texture3, 2);
-
+            glContext.uniform1i(prg.texture3, textureIndex3);
 
             glContext.activeTexture(glContext.TEXTURE3);
             glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex4]);
             // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
-            glContext.uniform1i(prg.texture4, 3);
+            glContext.uniform1i(prg.texture4, textureIndex4);
+
+            glContext.activeTexture(glContext.TEXTURE4);
+            glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex5]);
+            // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
+            glContext.uniform1i(prg.texture5, textureIndex5);
+
+            glContext.activeTexture(glContext.TEXTURE5);
+            glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex6]);
+            // glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR_MIPMAP_NEAREST);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
+            glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.REPEAT);
+            glContext.uniform1i(prg.texture6, textureIndex6);
 
             glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
             glContext.drawElements(glContext.TRIANGLES, indices.length, glContext.UNSIGNED_SHORT,0);
@@ -351,6 +372,7 @@
             initTextureWithImage("ressources/texture3.jpg", texColorTab);
             initTextureWithImage("ressources/texture4.jpg", texColorTab);
             initTextureWithImage("ressources/texture5.jpg", texColorTab);
+            initTextureWithImage("ressources/texture6.jpg", texColorTab);
 
             renderLoop();
         }

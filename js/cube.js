@@ -31,31 +31,9 @@ class Cube
 	//Initialisation method of a planet object
 	init()
 	{
-		//Defining the center point of the circle
-		this.vertices.push(0.0,0.0,0.0);
+		initVerticesNormalsTexturesIndexes();
 
-		//Based on division, generates the various vertices for the circle
-		for(var i = 0;i<360;i+=360/this.division)
-		{
-			this.vertices.push(this.radius * Math.sin(glMatrix.toRadian(i)), this.radius * Math.cos(glMatrix.toRadian(i)),0.0);
-
-		}
-
-		//And defines the same color for each of the vertices
-		for(var i =0;i<this.division+1;i++)
-		{
-			this.colors.push(this.color.r, this.color.g, this.color.b, 1.0);
-		}
-
-		//Definies the indexes for the objects, used to link each point
-		for(var i=0;i<this.division-1;i++)
-		{
-			this.indices.push(0,i+1,i+2);
-		}
-		//and links the last vertices
-		this.indices.push(0,this.division,1);
-
-		//Converts the values to buffers
+        //Converts the values to buffers
 		this.vertexBuffer = getVertexBufferWithVertices(this.vertices);
 		this.colorBuffer  = getVertexBufferWithVertices(this.colors);
 		this.indexBuffer  = getIndexBufferWithIndices(this.indices);
@@ -64,6 +42,114 @@ class Cube
 		mat4.identity(this.mvMatrix);
 		mat4.translate(this.mvMatrix, this.mvMatrix, vec3.fromValues(this.x, this.y, 0.0));
 	}
+
+    initVerticesNormalsTexturesIndexes()
+    {
+        vertices = [];
+        normals = [];
+        indices = [];
+        textCoords = [];
+
+        //---------------------------------------------
+        //Le cube
+        //---------------------------------------------
+
+        // Front face
+        this.vertices.push(-1.0, -1.0,  1.0);
+        this.vertices.push( 1.0, -1.0,  1.0);
+        this.vertices.push(-1.0,  1.0,  1.0);
+        this.vertices.push( 1.0,  1.0,  1.0);
+        this.normals.push(1, 0, 0, 1);
+        this.normals.push(1, 0, 0, 1);
+        this.normals.push(1, 0, 0, 1);
+        this.normals.push(1, 0, 0, 1);
+        textCoords.push(0.0, 0.0);
+        textCoords.push(1.0, 0.0);
+        textCoords.push(1.0, 1.0);
+        textCoords.push(0.0, 1.0);
+        indices.push(0, 1, 2);
+        indices.push(0, 2, 3);
+
+        // Back face
+        this.vertices.push(-1.0, -1.0, -1.0);
+        this.vertices.push(-1.0,  1.0, -1.0);
+        this.vertices.push( 1.0,  1.0, -1.0);
+        this.vertices.push( 1.0, -1.0, -1.0);
+        this.normals.push(1, 0, 0, 1);
+        this.normals.push(1, 0, 0, 1);
+        this.normals.push(1, 0, 0, 1);
+        this.normals.push(1, 0, 0, 1);
+        textCoords.push(1.0, 0.0);
+        textCoords.push(1.0, 1.0);
+        textCoords.push(0.0, 1.0);
+        textCoords.push(0.0, 0.0);
+        indices.push(4, 5, 6);
+        indices.push(4, 6, 7);
+
+        // Top face
+        this.vertices.push(-1.0,  1.0, -1.0);
+        this.vertices.push(-1.0,  1.0,  1.0);
+        this.vertices.push( 1.0,  1.0,  1.0);
+        this.vertices.push( 1.0,  1.0, -1.0);
+        this.normals.push(0, 0, 0, 1);
+        this.normals.push(0, 0, 0, 1);
+        this.normals.push(0, 0, 0, 1);
+        this.normals.push(0, 0, 0, 1);
+        textCoords.push(0.0, 1.0);
+        textCoords.push(0.0, 0.0);
+        textCoords.push(1.0, 0.0);
+        textCoords.push(1.0, 1.0);
+        indices.push(8, 9, 10);
+        indices.push(8, 10, 11);
+
+        // Bottom face
+        this.vertices.push(-1.0, -1.0, -1.0);
+        this.vertices.push( 1.0, -1.0, -1.0);
+        this.vertices.push( 1.0, -1.0,  1.0);
+        this.vertices.push(-1.0, -1.0,  1.0);
+        this.normals.push(0, 0, 0, 1);
+        this.normals.push(0, 0, 0, 1);
+        this.normals.push(0, 0, 0, 1);
+        this.normals.push(0, 0, 0, 1);
+        textCoords.push(1.0, 1.0);
+        textCoords.push(0.0, 1.0);
+        textCoords.push(0.0, 0.0);
+        textCoords.push(1.0, 0.0);
+        indices.push(12, 13, 14);
+        indices.push(12, 14, 15);
+
+        // Right face
+        this.vertices.push( 1.0, -1.0, -1.0);
+        this.vertices.push( 1.0,  1.0, -1.0);
+        this.vertices.push( 1.0,  1.0,  1.0);
+        this.vertices.push( 1.0, -1.0,  1.0);
+        this.normals.push(0, 0, 1, 1);
+        this.normals.push(0, 0, 1, 1);
+        this.normals.push(0, 0, 1, 1);
+        this.normals.push(0, 0, 1, 1);
+        textCoords.push(1.0, 0.0);
+        textCoords.push(1.0, 1.0);
+        textCoords.push(0.0, 1.0);
+        textCoords.push(0.0, 0.0);
+        indices.push(16, 17, 18);
+        indices.push(16, 18, 19);
+
+        // Left face
+        this.vertices.push(-1.0, -1.0, -1.0);
+        this.vertices.push(-1.0, -1.0,  1.0);
+        this.vertices.push(-1.0,  1.0,  1.0);
+        this.vertices.push(-1.0,  1.0, -1.0);
+        this.normals.push(0, 0, 1, 1);
+        this.normals.push(0, 0, 1, 1);
+        this.normals.push(0, 0, 1, 1);
+        this.normals.push(0, 0, 1, 1);
+        textCoords.push(0.0, 0.0);
+        textCoords.push(1.0, 0.0);
+        textCoords.push(1.0, 1.0);
+        textCoords.push(0.0, 1.0);
+        indices.push(20, 21, 22);
+        indices.push(20, 22, 23);
+    }
 
 	//Draw method of the planet object
 	draw()
