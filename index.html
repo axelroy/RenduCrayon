@@ -10,17 +10,14 @@
     -->
     <script id="shader-vs" type="x-shader/x-vertex">
         attribute vec3 aVertexPosition;
-        attribute vec2 aTextureCoord;
         attribute vec4 aColor;
         uniform mat4 uMVMatrix;
         uniform mat4 uPMatrix;
         varying vec4 vColor;
-        varying vec2 vTextureCoord;
         varying vec4 vPosition;
 
         void main(void) {
             vColor = aColor;
-            vTextureCoord = aTextureCoord;
 
             vPosition = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
 		    gl_Position = vPosition;
@@ -45,11 +42,7 @@
         uniform sampler2D uColorTexture5;
         uniform sampler2D uColorTexture6;
 
-        varying vec2 vTextureCoord;
-
         void main(void) {
-            //vec2 mapCoord = vec2(vTextureCoord.s, vTextureCoord.t);
-
             float x = (1.0 + (vPosition.x/vPosition.w));
             float y = (1.0 + (vPosition.y/vPosition.w));
 
@@ -64,7 +57,7 @@
 
             vec3 normalDirection = vec3(vColor.xyz);
 
-            bool texture = true;
+            bool texture = false;
 
             if (texture)
             {
@@ -146,9 +139,7 @@
         var colorBuffer = null;
 
         //Déclaration des buffers pour les
-        var textCoordsBuffer = null;
         var texColorTab = new Array();
-        var textCoords = [];
 
         //Déclaration des tableaux correspondants aux buffers mais pour le JS
         var indices = [];
@@ -176,8 +167,6 @@
         glContext.enableVertexAttribArray(prg.colorAttribute);
 
         //Textures
-        prg.textureCoordsAttribute = glContext.getAttribLocation(prg, "aTextureCoord");
-        glContext.enableVertexAttribArray(prg.textureCoordsAttribute);
         prg.texture1 = glContext.getUniformLocation(prg, "uColorTexture1");
         prg.texture2 = glContext.getUniformLocation(prg, "uColorTexture2");
         prg.texture3 = glContext.getUniformLocation(prg, "uColorTexture3");
@@ -202,7 +191,6 @@
             vertices = [];
             normals = [];
             indices = [];
-            textCoords = [];
 
             console.log(form);
 
@@ -217,10 +205,6 @@
                 normals.push(0, 0, 1, 0);
                 normals.push(0, 0, 1, 0);
                 normals.push(0, 0, 1, 0);
-                textCoords.push(0.0, 0.0);
-                textCoords.push(1.0, 0.0);
-                textCoords.push(1.0, 1.0);
-                textCoords.push(0.0, 1.0);
                 indices.push(0, 1, 2);
                 indices.push(0, 2, 3);
 
@@ -233,10 +217,6 @@
                 normals.push(0, 1, 0, 0);
                 normals.push(0, 1, 0, 0);
                 normals.push(0, 1, 0, 0);
-                textCoords.push(1.0, 0.0);
-                textCoords.push(1.0, 1.0);
-                textCoords.push(0.0, 1.0);
-                textCoords.push(0.0, 0.0);
                 indices.push(4, 5, 6);
                 indices.push(4, 6, 7);
 
@@ -249,10 +229,6 @@
                 normals.push(0, 1, 1, 0);
                 normals.push(0, 1, 1, 0);
                 normals.push(0, 1, 1, 0);
-                textCoords.push(0.0, 1.0);
-                textCoords.push(0.0, 0.0);
-                textCoords.push(1.0, 0.0);
-                textCoords.push(1.0, 1.0);
                 indices.push(8, 9, 10);
                 indices.push(8, 10, 11);
 
@@ -265,10 +241,6 @@
                 normals.push(1, 0, 0, 0);
                 normals.push(1, 0, 0, 0);
                 normals.push(1, 0, 0, 0);
-                textCoords.push(1.0, 1.0);
-                textCoords.push(0.0, 1.0);
-                textCoords.push(0.0, 0.0);
-                textCoords.push(1.0, 0.0);
                 indices.push(12, 13, 14);
                 indices.push(12, 14, 15);
 
@@ -281,10 +253,6 @@
                 normals.push(1, 0, 1, 0);
                 normals.push(1, 0, 1, 0);
                 normals.push(1, 0, 1, 0);
-                textCoords.push(1.0, 0.0);
-                textCoords.push(1.0, 1.0);
-                textCoords.push(0.0, 1.0);
-                textCoords.push(0.0, 0.0);
                 indices.push(16, 17, 18);
                 indices.push(16, 18, 19);
 
@@ -297,10 +265,6 @@
                 normals.push(1, 1, 0, 0);
                 normals.push(1, 1, 0, 0);
                 normals.push(1, 1, 0, 0);
-                textCoords.push(0.0, 0.0);
-                textCoords.push(1.0, 0.0);
-                textCoords.push(1.0, 1.0);
-                textCoords.push(0.0, 1.0);
                 indices.push(20, 21, 22);
                 indices.push(20, 22, 23);
 
@@ -342,15 +306,7 @@
 
         		indices.push(0,1,2,3,4,5);
 
-                textCoords.push(0.0, 0.0);
-                textCoords.push(1.0, 0.0);
-                textCoords.push(1.0, 1.0);
-                textCoords.push(0.0, 0.0);
-                textCoords.push(1.0, 0.0);
-                textCoords.push(1.0, 1.0);
-
                 console.log(vertices);
-                console.log(textCoords);
 
                 binding_method = glContext.TRIANGLE_STRIP;
             }
@@ -360,7 +316,6 @@
             vertexBuffer = getVertexBufferWithVertices(vertices);
             colorBuffer  = getVertexBufferWithVertices(normals);
             indexBuffer  = getIndexBufferWithIndices(indices);
-            textCoordsBuffer = getArrayBufferWithArray(textCoords);
         }
 
 
@@ -417,9 +372,6 @@
             var textureIndex6 = 5;
 
             // Il va falloir faire autrement, c'est extrêmement lourd
-            glContext.bindBuffer(glContext.ARRAY_BUFFER, textCoordsBuffer);
-            glContext.vertexAttribPointer(prg.textureCoordsAttribute, 2, glContext.FLOAT, false, 0, 0);
-
             glContext.activeTexture(glContext.TEXTURE0);
             glContext.bindTexture(glContext.TEXTURE_2D, texColorTab[textureIndex1]);
             glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.REPEAT);
