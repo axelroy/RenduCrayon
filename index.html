@@ -150,7 +150,9 @@
         var pMatrix = mat4.create();
 
         var form = "cube";
-        var binding_method = glContext.TRIANGLE_STRIP;
+        var texturesSet = 0;
+        var textureCount = 6;
+        var binding_method = glContext.TRIANGLES;
 
         //---------------------------------------------
         //  Fonctions pour l'initialisation de la scene
@@ -186,13 +188,48 @@
             initBuffers(form)
         }
 
+        function updateTextures(value)
+        {
+            texColorTab = [];
+
+            if (texturesSet = value.toString() == "handstroke")
+            {
+                // Premier pack de textures / Hand Stroke
+                initTextureWithImage("ressources/texture1.jpg", texColorTab);
+                initTextureWithImage("ressources/texture2.jpg", texColorTab);
+                initTextureWithImage("ressources/texture3.jpg", texColorTab);
+                initTextureWithImage("ressources/texture4.jpg", texColorTab);
+                initTextureWithImage("ressources/texture5.jpg", texColorTab);
+                initTextureWithImage("ressources/texture6.jpg", texColorTab);
+            }
+
+            if (texturesSet = value.toString() == "artistic")
+            {
+                initTextureWithImage("ressources/texture7.jpg", texColorTab);
+                initTextureWithImage("ressources/texture8.jpg", texColorTab);
+                initTextureWithImage("ressources/texture9.jpg", texColorTab);
+                initTextureWithImage("ressources/texture10.jpg", texColorTab);
+                initTextureWithImage("ressources/texture11.jpg", texColorTab);
+                initTextureWithImage("ressources/texture12.jpg", texColorTab);
+            }
+
+            if (texturesSet = value.toString() == "pen")
+            {
+                initTextureWithImage("ressources/texture13.jpg", texColorTab);
+                initTextureWithImage("ressources/texture14.jpg", texColorTab);
+                initTextureWithImage("ressources/texture15.jpg", texColorTab);
+                initTextureWithImage("ressources/texture16.jpg", texColorTab);
+                initTextureWithImage("ressources/texture17.jpg", texColorTab);
+                initTextureWithImage("ressources/texture18.jpg", texColorTab);
+            }
+        }
+
         //Remplissage des buffers
         function initBuffers(form){
             vertices = [];
             normals = [];
             indices = [];
 
-            console.log(form);
 
             if (form == "cube")
             {
@@ -281,8 +318,6 @@
                 y = size/2;
                 z = size/2;
 
-
-
                 // géométrie via TRIANGLES
                 vertices.push(x, y , z);  //Origin
                 vertices.push(x - size / 2, y  - size, z - size / 2);  // 1
@@ -295,16 +330,16 @@
                 vertices.push(x - size / 2, y  - size, z - size / 2);  // 1
                 vertices.push(x + size / 2, y  - size, z - size / 2);  // 2
                 vertices.push(x, y  - size, z + size / 2);  //3 Point arrière
-                normals.push(1, 0, 0, 0);
-                normals.push(1, 0, 0, 0);
-                normals.push(1, 0, 0, 0);
+                normals.push(0.5, 0, 0, 0);
+                normals.push(0.5, 0, 0, 0);
+                normals.push(0.5, 0, 0, 0);
 
                 vertices.push(x, y  - size, z + size / 2);  //3 Point arrière
                 vertices.push(x, y , z);  //Origin
                 vertices.push(x + size / 2, y  - size, z - size / 2);  // 2
-                normals.push(1, 1, 0, 0);
-                normals.push(1, 1, 0, 0);
-                normals.push(1, 1, 0, 0);
+                normals.push(1, 0.5, 0, 0);
+                normals.push(1, 0.5, 0, 0);
+                normals.push(1, 0.5, 0, 0);
 
                 vertices.push(x, y  - size, z + size / 2);  //3 Point arrière
                 vertices.push(x, y , z);  //Origin
@@ -316,12 +351,9 @@
         		//And defines the same color for each of the vertices
         		indices.push(0,1,2,3,4,5,6,7,8,9,10,11);
 
-                console.log(vertices);
-
                 binding_method = glContext.TRIANGLES;
 
             }
-            console.log(binding_method);
 
             //Liaison des pointeurs avec les tableaux
             vertexBuffer = getVertexBufferWithVertices(vertices);
@@ -422,8 +454,6 @@
             glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
             // Suivant la méthode de définition de la forme (réalisée à la main), le binding varie
             glContext.drawElements(binding_method, indices.length, glContext.UNSIGNED_SHORT,0);
-
-            console.log(binding_method);
         }
 
         //Retourne un contexte de rendu sur le canevas déclaré en html
@@ -433,13 +463,13 @@
             initProgram();
             initBuffers(form);
 
+            // Premier pack de textures / Hand Stroke
             initTextureWithImage("ressources/texture1.jpg", texColorTab);
             initTextureWithImage("ressources/texture2.jpg", texColorTab);
             initTextureWithImage("ressources/texture3.jpg", texColorTab);
             initTextureWithImage("ressources/texture4.jpg", texColorTab);
             initTextureWithImage("ressources/texture5.jpg", texColorTab);
             initTextureWithImage("ressources/texture6.jpg", texColorTab);
-
             renderLoop();
         }
 
@@ -500,6 +530,11 @@
     <select default="cube" class="form-control" id="form" onchange="updateForm(this.value)">
         <option value="cube">Cube</option>
         <option value="tetra">Tétraèdre</option>
+    </select>
+    <select default="handstroke" class="form-control" id="form" onchange="updateTextures(this.value)">
+        <option value="handstroke">Dessiné main</option>
+        <option value="artistic">Artistique</option>
+        <option value="pen">Crayon</option>
     </select>
 </body>
 <script src='./js/mouseMotionHandling.js'></script>
