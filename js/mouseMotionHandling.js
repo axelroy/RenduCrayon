@@ -7,8 +7,6 @@ var myCanvas = document.getElementById('webgl-canvas');
 myCanvas.onmousemove = handleMouseMove;
 myCanvas.onmousedown = handleMouseDown;
 myCanvas.onmouseup = handleMouseUp;
-myCanvas.onmousewheel = handleMouseWheel;
-
 
 // this variable will tell if the mouse is being moved while pressing the button
 var rotY = 0; //rotation on the Y-axis (in degrees)
@@ -19,17 +17,6 @@ var mousePos;
 var rotSpeed = 1.0; //rotation speed
 var mouseButton;
 
-
-
-function handleMouseWheel(event){
-    var wheel = event.wheelDelta/120;//n or -n
-
-    zoom += wheel/2;
-}
-
-
-
-
 function handleMouseMove(event) {
 	  event = event || window.event; // IE-ism
 	  mousePos = {
@@ -37,10 +24,12 @@ function handleMouseMove(event) {
 		  y: event.clientY
 	  };
 	  if (dragging){
+
+
 		dX = mousePos.x - oldMousePos.x;
 		dY = mousePos.y - oldMousePos.y;
 
-		// console.log((mousePos.x - oldMousePos.x) + ", " + (mousePos.y - oldMousePos.y)); //--- DEBUG LINE ---
+		//console.log((mousePos.x - oldMousePos.x) + ", " + (mousePos.y - oldMousePos.y)); //--- DEBUG LINE ---
 
 
 		rotY += dX > 0 ? rotSpeed : dX < 0 ? -rotSpeed : 0;

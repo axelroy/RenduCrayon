@@ -17,26 +17,28 @@
 /*
 * Creates the manipulation object on the canvas, by binding events listener
 */
+
 var Manipulation = function(canvasName, translation) {
 	this.initCamera(translation);
-	
+
+    console.log("Init");
 	var me = this;
-	
+
 	// add mouse listener on canvas when loaded
 	window.addEventListener("load", function () {
 		me.canvas = document.getElementById(canvasName);
-	
+
 		me.canvas.addEventListener("mousedown", me.handleMouseDown.bind(me));
 		me.canvas.addEventListener("wheel", me.handleWheel.bind(me));
 		me.canvas.addEventListener("contextmenu", me.handleContextMenu.bind(me));
-		
+
 		// allow dragging with the mouse "outside" the canvas
 		document.addEventListener("mouseup", me.handleMouseUp.bind(me));
 		document.addEventListener("mousemove", me.handleMouseMove.bind(me));
 	});
-	
+
 	// add keyboard listener on window
-	window.addEventListener("keydown", this.handleKeyDown.bind(this));	
+	window.addEventListener("keydown", this.handleKeyDown.bind(this));
 };
 
 /*
@@ -44,21 +46,21 @@ var Manipulation = function(canvasName, translation) {
 * Yaw is the left/right rotation
 * Pitch is the top/bottom rotation
 */
-Manipulation.prototype.initCamera = function(translation, pitch, yaw) {	
-	this.pitch = pitch || 0.0;	
+Manipulation.prototype.initCamera = function(translation, pitch, yaw) {
+	this.pitch = pitch || 0.0;
 	this.yaw = yaw || 0.0;
 
 	this.posX = translation[0];
 	this.posY = translation[1];
 	this.posZ = translation[2];
-	
+
 	this.oldMousePos = {x: 0, y: 0};
 };
 
 /*
 * Handle mouse down event, by entering in left or right dragging mode
 */
-Manipulation.prototype.handleMouseDown = function(event) {	
+Manipulation.prototype.handleMouseDown = function(event) {
 	// left/right click to enter drag mode
 	this.draggingLeft = (event.which === 1 || event.button === 1);
 	this.draggingRight = (event.which === 2 || event.button === 2);
@@ -69,7 +71,7 @@ Manipulation.prototype.handleMouseDown = function(event) {
 /*
 * Handle mouse up event, by stopping draging modes
 */
-Manipulation.prototype.handleMouseUp = function(event) {	
+Manipulation.prototype.handleMouseUp = function(event) {
 	this.draggingLeft = false;
 	this.draggingRight = false;
 };
@@ -79,7 +81,7 @@ Manipulation.prototype.handleMouseUp = function(event) {
 * Rotates the camera (pitch/yaw) on left click
 * Go up/down or right click
 */
-Manipulation.prototype.handleMouseMove = function(event) {	
+Manipulation.prototype.handleMouseMove = function(event) {
 	event = event || window.event; // IE-ism
 	this.mousePos = {
 	  x: event.clientX,
@@ -99,25 +101,25 @@ Manipulation.prototype.handleMouseMove = function(event) {
 		// go up/down
 		this.posY += dY / 20.0;
 	}
-	
+
 	this.oldMousePos = this.mousePos;
 };
 
 /*
 * Handle mouse wheel event, by going forward or backward
 */
-Manipulation.prototype.handleWheel = function(event) {	
+Manipulation.prototype.handleWheel = function(event) {
 	if (event.deltaY < 0) { // Chrome, Firefox
 		// go forward
 		this.posX -= Math.sin(degToRad(this.yaw));
 		this.posZ -= Math.cos(degToRad(this.yaw));
-			
+
 	} else {
 		// go backward
 		this.posX += Math.sin(degToRad(this.yaw));
 		this.posZ += Math.cos(degToRad(this.yaw));
 	}
-	
+
 	// dont scroll page, focus on canvas only
 	event.preventDefault();
 };
@@ -137,8 +139,8 @@ Manipulation.prototype.handleKeyDown = function(event) {
 	if (this.canvas != document.activeElement) {
 		return;
 	}
-	
-	switch(event.keyCode){		
+
+	switch(event.keyCode){
 		case 87: //w
 			// go forward
 			this.posX -= Math.sin(degToRad(this.yaw));
@@ -149,24 +151,24 @@ Manipulation.prototype.handleKeyDown = function(event) {
 			this.posX += Math.sin(degToRad(this.yaw));
 			this.posZ += Math.cos(degToRad(this.yaw));
 			break;
-			
+
 		case 68: //d
 			// go right
 			this.posX += Math.cos(degToRad(-this.yaw));
 			this.posZ += Math.sin(degToRad(-this.yaw));
 			break;
-			
+
 		case 65: //a
 			// go left
 			this.posX -= Math.cos(degToRad(-this.yaw));
 			this.posZ -= Math.sin(degToRad(-this.yaw));
 			break;
-			
+
 		case 81: //q
 			// go up
 			this.posY += 1.0;
 			break;
-			
+
 		case 69: //e
 			// go down
 			this.posY -= 1.0;
