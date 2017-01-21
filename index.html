@@ -288,6 +288,7 @@
 
             translate();
             rotate();
+            rotateModelViewMatrixUsingQuaternion();
 
             glContext.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
             glContext.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
@@ -421,9 +422,7 @@
     </script>
 </head>
 
-<!--
-    Body
--->
+
 <body onload="initWebGL()">
     <h1>Rendu crayon</h1>
     <button id="goLeft" onclick="goLeft()"> << </button>
@@ -433,5 +432,6 @@
         HTML5 is not supported
     </canvas>
 </body>
-<!--<script src='./js/mouseMotionHandling.js'></script>-->
+<script src='./js/mouseMotionHandling.js'></script>
+<script src='./js/manipulation.js'></script>
 </html>
