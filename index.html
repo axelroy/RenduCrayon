@@ -388,7 +388,7 @@
                 angle--;
                 rotAngle--;
             }
-            mat4.rotate(mvMatrix, mvMatrix, degToRad(rotAngle), [0, 1, 0]);
+            mat4.rotate(mvMatrix, mvMatrix, degToRad(rotAngle/4), [0, 1, 0]);
             mat4.rotate(mvMatrix, mvMatrix, degToRad(rotAngle/2), [0, 0, 1]);
         }
 
