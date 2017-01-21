@@ -57,7 +57,7 @@
 
             vec3 normalDirection = vec3(vColor.xyz);
 
-            bool texture = false;
+            bool texture = true;
 
             if (texture)
             {
@@ -273,37 +273,53 @@
 
             if (form == "tetra")
             {
-                x = 0;
-                y = 0;
-                z = 0;
+                // taille du tétraèdre
+                size = 3;
 
-                size = 4;
+                // Défini le centre de la forme
+                x = size/2;
+                y = size/2;
+                z = size/2;
 
+
+
+                // géométrie via TRIANGLES
                 vertices.push(x, y , z);  //Origin
                 vertices.push(x - size / 2, y  - size, z - size / 2);  // 1
                 vertices.push(x + size / 2, y  - size, z - size / 2);  // 2
 
-                vertices.push(x, y  - size, z + size / 2);  //3 Point arrière
-
-                vertices.push(x, y , z);   //4
-                vertices.push(x - size / 2, y  - size, z - size / 2);  // 5
-
-        		//And defines the same color for each of the vertices
-
-    			normals.push(0, 0, 0, 0);
-                normals.push(1, 1, 0, 0);
-    			normals.push(1, 0, 0, 0);
-                normals.push(0, 1, 0, 0);
-    			normals.push(1, 0, 1, 0);
+                normals.push(0, 0, 1, 0);
+                normals.push(0, 0, 1, 0);
                 normals.push(0, 0, 1, 0);
 
+                vertices.push(x - size / 2, y  - size, z - size / 2);  // 1
+                vertices.push(x + size / 2, y  - size, z - size / 2);  // 2
+                vertices.push(x, y  - size, z + size / 2);  //3 Point arrière
+                normals.push(1, 0, 0, 0);
+                normals.push(1, 0, 0, 0);
+                normals.push(1, 0, 0, 0);
 
+                vertices.push(x, y  - size, z + size / 2);  //3 Point arrière
+                vertices.push(x, y , z);  //Origin
+                vertices.push(x + size / 2, y  - size, z - size / 2);  // 2
+                normals.push(1, 1, 0, 0);
+                normals.push(1, 1, 0, 0);
+                normals.push(1, 1, 0, 0);
 
-        		indices.push(0,1,2,3,4,5);
+                vertices.push(x, y  - size, z + size / 2);  //3 Point arrière
+                vertices.push(x, y , z);  //Origin
+                vertices.push(x - size / 2, y  - size, z - size / 2);  // 1
+                normals.push(0, 1, 0, 0);
+                normals.push(0, 1, 0, 0);
+                normals.push(0, 1, 0, 0);
+
+        		//And defines the same color for each of the vertices
+        		indices.push(0,1,2,3,4,5,6,7,8,9,10,11);
 
                 console.log(vertices);
 
-                binding_method = glContext.TRIANGLE_STRIP;
+                binding_method = glContext.TRIANGLES;
+
             }
             console.log(binding_method);
 
@@ -483,7 +499,7 @@
     <br />
     <select default="cube" class="form-control" id="form" onchange="updateForm(this.value)">
         <option value="cube">Cube</option>
-        <option value="tetra">Tetraèdre</option>
+        <option value="tetra">Tétraèdre</option>
     </select>
 </body>
 <script src='./js/mouseMotionHandling.js'></script>
