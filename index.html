@@ -289,20 +289,15 @@
                 vertices.push(x - size / 2, y  - size, z - size / 2);  // 5
 
         		//And defines the same color for each of the vertices
-        		for(var i =0;i<2;i++)
-        		{
-        			normals.push(1, 0, 0, 0);
-        		}
 
-                for(var i =0;i<2;i++)
-        		{
-        			normals.push(1, 1, 0, 0);
-        		}
+    			normals.push(0, 0, 0, 0);
+                normals.push(1, 1, 0, 0);
+    			normals.push(1, 0, 0, 0);
+                normals.push(0, 1, 0, 0);
+    			normals.push(1, 0, 1, 0);
+                normals.push(0, 0, 1, 0);
 
-                for(var i =0;i<2;i++)
-        		{
-        			normals.push(1, 0, 1, 0);
-        		}
+
 
         		indices.push(0,1,2,3,4,5);
 
